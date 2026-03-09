@@ -12,11 +12,17 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 from datetime import date
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+import argparse
 
 # Set device
-cuda_kernel = 0
+parser = argparse.ArgumentParser(description="Test traffic monitoring SNN model")
+parser.add_argument("--gpu", type=int, default=2, help="The CUDA device ID to use (default: %(default)s)")
+# One could also add an argument for the model here later.
+args = parser.parse_args()
+
 sequence_length, overlap, batch_size = 60, 25, 24
-torch.cuda.set_device(cuda_kernel)
+torch.cuda.set_device(args.gpu)
+
 num_inputs = 256 * 256
 num_outputs = 64 * 64  # 4096
 # tau_list = [120, 140, 160, 180, 200] #For trying different taus

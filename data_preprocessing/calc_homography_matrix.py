@@ -22,7 +22,7 @@ warnings.filterwarnings("ignore", message="No inliers found. Model not fitted*")
 
 
 def process_clip(event_path, normal_path):
-    torch.cuda.set_device(device=0)
+    torch.cuda.set_device(device=args.gpu)    
     event_data = torch.load(event_path)
 
     normal_cap = cv2.VideoCapture(normal_path)
@@ -335,7 +335,16 @@ parser.add_argument(
     help="Can be set to also generate .mp4 files of the found homography matrix (default: %(default)s)",
 )
 
+parser.add_argument(
+    "--gpu",
+    type=int,
+    default=2,
+    help="The CUDA device ID to use (default: %(default)s)")
+
 args = parser.parse_args()
+
+torch.set_default_device(args.gpu)
+
 
 
 calc_H_matrix(args.input_dir, args.start_clip, args.end_clip, args.save_vid)

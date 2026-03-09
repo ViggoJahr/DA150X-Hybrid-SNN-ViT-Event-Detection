@@ -21,9 +21,7 @@ from torch.amp import autocast, GradScaler
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 # Set device
-cuda_kernel = 2
 sequence_length, overlap, batch_size = 60, 25, 24
-torch.cuda.set_device(cuda_kernel)
 num_inputs = 256 * 256
 num_outputs = 64 * 64  # 4096
 # tau_list = [120, 140, 160, 180, 200] #For trying different taus
@@ -613,6 +611,16 @@ parser.add_argument(
     help="The number of epochs to train the model for (default: %(default)s epoch)",
 )
 
+parser.add_argument(
+    "--gpu",
+    type=int,
+    default=2,
+    help="The CUDA device ID to use (default: %(default)s)",
+)
+
 args = parser.parse_args()
+
+# SET CUDA DEVICE HERE
+torch.cuda.set_device(args.gpu)
 
 start_training(args.input_dir, args.output_dir, args.epoch)

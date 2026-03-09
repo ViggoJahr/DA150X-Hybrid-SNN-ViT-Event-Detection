@@ -7,7 +7,6 @@ from tqdm import tqdm
 
 rois = [(47 - 35, 137 - 10, 303 - 35, 393 - 10), (635 - 256, 137 - 10, 635, 393 - 10)]
 
-torch.set_default_device(0)
 
 
 def visuliaze_rois(input_dir):
@@ -51,6 +50,14 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument("input_dir", help="The path to the directory containing the event data")
 
+parser.add_argument(
+    "--gpu",
+    type=int,
+    default=2,
+    help="The CUDA device ID to use (default: %(default)s)")
+
 args = parser.parse_args()
+
+torch.set_default_device(args.gpu)
 
 visuliaze_rois(args.input_dir)

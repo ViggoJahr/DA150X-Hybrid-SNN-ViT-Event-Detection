@@ -19,7 +19,6 @@ import os
 
 """
 
-torch.cuda.set_device(0)
 
 # 0 - Person
 # 1 - Bicycle
@@ -373,11 +372,22 @@ parser.add_argument(
     help="Can be set to also generate .mp4 files of the generated training data (default: %(default)s)",
 )
 
+parser.add_argument(
+    "--gpu",
+    type=int,
+    default=2,
+    help="The CUDA device ID to use (default: %(default)s)",
+)
+
+
+
 args = parser.parse_args()
 
+# Set cuda_device
+torch.cuda.set_device(args.gpu)
 
 generate_labels(
-    args.input_dir, args.output_dir, args.start_clip, args.end_clip, args.roi, args.save_vid
+    args.input_dir, args.output_dir, args.start_clip, args.end_clip, args.roi, args.save_vidm
 )
 
 # w35/box1/1-09-04

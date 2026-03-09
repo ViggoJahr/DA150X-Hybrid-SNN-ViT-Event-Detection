@@ -9,7 +9,8 @@ from tqdm import tqdm
 from sklearn.preprocessing import minmax_scale
 import event_streamer_c
 
-cuda_device = 0
+# Removing hard-coded cuda_device - allowing for argparse.
+# cuda_device = 0
 decay_rate = 0.0002
 frame_width = 640
 frame_height = 480
@@ -33,8 +34,8 @@ def pretty_time(seconds):
     return " ".join([f"{count}{unit}" for (count, unit) in measures if count])
 
 
-def bin_events(fpath, output_dir, clip_length, num_of_clips, save_vids):
-    torch.cuda.set_device(device=cuda_device)
+def bin_events(fpath, output_dir, clip_length, num_of_clips, save_vids, gpu_id):
+    torch.cuda.set_device(device=gpu_id)
 
     read_from = 239
     last_time_high = 0
@@ -190,7 +191,13 @@ parser.add_argument(
     default=False,
     help="Can be set to also generate .mp4 files of the processed event frames (default: %(default)s)",
 )
+parser.add_argument(
+    "--gpu",
+    type=int,
+    default=2,
+    help="The CUDA device ID to use (default: %(default)s)",
+)
 
 args = parser.parse_args()
 
-bin_events(args.filename, args.output_dir, args.length, args.clips_count, args.save_vid)
+bin_events(args.filename, args.output_dir, args.length, args.clips_count, args.save_vid, args.gpu)
