@@ -219,7 +219,7 @@ def process_roi(i, j, roi, start_clip, end_clip, input_dir, save_dir, visualize)
     print(
         f"Processing clip: {i-start_clip+1}/{end_clip-start_clip+1} | ROI: {roi} ({j+1}/{len(rois)})"
     )
-    targets = get_targets(f"{input_dir}track/labels/", 5400, i)
+    targets = get_targets(f"{input_dir}track/labels_new/", 5400, i)
     frames_tensor = []
     labels_tensor = {}
     for trck_class in tracked_classes:
@@ -318,7 +318,7 @@ def generate_labels(input_dir, save_dir, start_clip, end_clip, only_roi, visuali
 
     H = transform.SimilarityTransform()
     H.params = np.load(f"{input_dir}homography-matrix.npy")  # calc_H_matrix(input_dir, 4, 29, True)
-    save_dir = f"{save_dir}{input_dir.split('/')[-4]}-{input_dir.split('/')[-2]}/"
+    save_dir = f"{save_dir}output/"
     Path(save_dir).mkdir(parents=True, exist_ok=True)
     for i in range(start_clip, end_clip + 1):
         for j, roi in enumerate(rois):
@@ -387,7 +387,7 @@ args = parser.parse_args()
 torch.cuda.set_device(args.gpu)
 
 generate_labels(
-    args.input_dir, args.output_dir, args.start_clip, args.end_clip, args.roi, args.save_vidm
+    args.input_dir, args.output_dir, args.start_clip, args.end_clip, args.roi, args.save_vid
 )
 
 # w35/box1/1-09-04
