@@ -19,3 +19,12 @@ __pycache__
 *.avi
 *.txt
 *.dll
+data/processed/
+data/training_output/
+data/event_tensors/
+data/output_clips/
+runs/
+output.log
+data_preprocessing/build/
+*.so
+*.o
