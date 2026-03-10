@@ -1,4 +1,5 @@
 import argparse
+import argparse
 import cv2
 import numpy as np
 import torch
@@ -10,7 +11,7 @@ rois = [(47 - 35, 137 - 10, 303 - 35, 393 - 10), (635 - 256, 137 - 10, 635, 393 
 
 
 def visuliaze_rois(input_dir):
-    data = torch.load(f"{input_dir}events/event_frames_6.pt")
+    data = torch.load("data/event_tensors/event_frames_0.pt")
 
     out = cv2.VideoWriter(
         filename=f"{input_dir}roi-vis.mp4",
@@ -58,6 +59,5 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-torch.set_default_device(args.gpu)
-
+device = torch.device(f"cuda:{args.gpu}" if torch.cuda.is_available() else "cpu")
 visuliaze_rois(args.input_dir)

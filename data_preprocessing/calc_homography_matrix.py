@@ -12,7 +12,6 @@ from skimage.measure import ransac
 from skimage.feature import (
     match_descriptors,
     corner_peaks,
-    plot_matched_features,
     BRIEF,
 )
 
@@ -22,7 +21,7 @@ warnings.filterwarnings("ignore", message="No inliers found. Model not fitted*")
 
 
 def process_clip(event_path, normal_path):
-    torch.cuda.set_device(device=args.gpu)    
+    torch.cuda.set_device(device=args.gpu)
     event_data = torch.load(event_path)
 
     normal_cap = cv2.VideoCapture(normal_path)
@@ -151,7 +150,7 @@ def process_clip_sequence(event_folder, normal_folder, start_clip, end_clip, res
 
     models = []
     for i in range(start_clip, end_clip + 1):
-        model = process_clip(f"{event_folder}event_frames_{i}.pt", f"{normal_folder}_{i}.mp4")
+        model = process_clip(f"data/event_tensors/event_frames_0.pt", f"data/output_clips/test_clip_0.mp4")
         if model is not None:
             models.append(model.params)
 
@@ -181,8 +180,8 @@ def calc_H_matrix(input_dir, start_clip, end_clip, save_vid=False):
         t1 = Thread(
             target=process_clip_sequence,
             args=[
-                f"{input_dir}events/",
-                f"{input_dir}normal/",
+                f"data/event_tensors/",
+                f"data/output_clips/",
                 start_clip + clip_per_thread * 2 + 1,
                 end_clip,
                 models,
@@ -193,8 +192,8 @@ def calc_H_matrix(input_dir, start_clip, end_clip, save_vid=False):
         t2 = Thread(
             target=process_clip_sequence,
             args=[
-                f"{input_dir}events/",
-                f"{input_dir}normal/",
+                f"data/event_tensors/",
+                f"data/output_clips/",
                 start_clip + clip_per_thread * 1 + 1,
                 start_clip + clip_per_thread * 2,
                 models,
@@ -203,8 +202,8 @@ def calc_H_matrix(input_dir, start_clip, end_clip, save_vid=False):
         t2.start()
 
     process_clip_sequence(
-        f"{input_dir}events/",
-        f"{input_dir}normal/",
+        f"data/event/tensors/",
+        f"data/output_clips/",
         start_clip,
         start_clip + clip_per_thread * 1,
         models,
@@ -223,9 +222,9 @@ def calc_H_matrix(input_dir, start_clip, end_clip, save_vid=False):
         np.save(f"{input_dir}/homography-matrix.npy", model)
 
         if save_vid:
-            event_data = torch.load(f"{input_dir}events/event_frames_6.pt")
+            event_data = torch.load(f"{input_dir}event_tensors/event_frames_0.pt")
 
-            normal_cap = cv2.VideoCapture(f"{input_dir}normal/_6.mp4")
+            normal_cap = cv2.VideoCapture(f"data/output_clips/_0.mp4")
 
             target_tensors = get_targets(f"{input_dir}track/labels/", 5400, 6)
 
@@ -342,9 +341,6 @@ parser.add_argument(
     help="The CUDA device ID to use (default: %(default)s)")
 
 args = parser.parse_args()
-
-torch.set_default_device(args.gpu)
-
 
 
 calc_H_matrix(args.input_dir, args.start_clip, args.end_clip, args.save_vid)
