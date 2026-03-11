@@ -26,8 +26,8 @@ num_inputs = 256 * 256
 num_outputs = 64 * 64  # 4096
 # tau_list = [120, 140, 160, 180, 200] #For trying different taus
 nr_par_last_layer_list = [500]
-w_decay = 1e-4  # 6.5e-3
-lr = 5e-4 #changed from 1e^4
+w_decay = 1e-4  # Changed from 1e-4 on v1
+lr = 1e-4
 print_image = (
     False  # Set true to save current image for each loop, used to see progress during training
 )
@@ -136,8 +136,8 @@ for layer_nr in nr_par_last_layer_list:
 
             self.maxpool = nn.MaxPool2d(2, 2)
             # self.avgpool = nn.AvgPool2d(2, 2)
-            self.dropout1 = nn.Dropout(p=0.3)
-            self.dropout2 = nn.Dropout(p=0.3)
+            self.dropout1 = nn.Dropout(p=0.4)
+            self.dropout2 = nn.Dropout(p=0.5)
 
         def forward(self, x, mem_states):
             batch_size, C, W, H = x.shape

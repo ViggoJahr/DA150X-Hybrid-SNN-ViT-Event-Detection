@@ -31,43 +31,41 @@ class EventDataset(Dataset):
 
         rand_region = rand.randint(0, 8)
 
-        match rand_region:
-            case 0:
-                cropped_frames = TF.center_crop(frames, (200, 200))
-                cropped_targets = TF.resize(TF.center_crop(targets, (50, 50)), (64, 64))
+        if rand_region == 0:
+            cropped_frames = TF.center_crop(frames, (200, 200))
+            cropped_targets = TF.resize(TF.center_crop(targets, (50, 50)), (64, 64))
 
-            case 1:
-                cropped_frames = TF.crop(frames, 0, 0, 200, 200)
-                cropped_targets = TF.resize(TF.crop(targets, 0, 0, 50, 50), (64, 64))
+        elif rand_region == 1:
+            cropped_frames = TF.crop(frames, 0, 0, 200, 200)
+            cropped_targets = TF.resize(TF.crop(targets, 0, 0, 50, 50), (64, 64))
 
-            case 2:
-                cropped_frames = TF.crop(frames, 0, 256 - 200, 200, 200)
-                cropped_targets = TF.resize(TF.crop(targets, 0, 64 - 50, 50, 50), (64, 64))
+        elif rand_region == 2:
+            cropped_frames = TF.crop(frames, 0, 256 - 200, 200, 200)
+            cropped_targets = TF.resize(TF.crop(targets, 0, 64 - 50, 50, 50), (64, 64))
 
-            case 3:
-                cropped_frames = TF.crop(frames, 256 - 200, 256 - 200, 200, 200)
-                cropped_targets = TF.resize(TF.crop(targets, 64 - 50, 64 - 50, 50, 50), (64, 64))
+        elif rand_region == 3:
+            cropped_frames = TF.crop(frames, 256 - 200, 256 - 200, 200, 200)
+            cropped_targets = TF.resize(TF.crop(targets, 64 - 50, 64 - 50, 50, 50), (64, 64))
 
-            case 4:
-                cropped_frames = TF.crop(frames, 256 - 200, 0, 200, 200)
-                cropped_targets = TF.resize(TF.crop(targets, 64 - 50, 0, 50, 50), (64, 64))
+        elif rand_region == 4:
+            cropped_frames = TF.crop(frames, 256 - 200, 0, 200, 200)
+            cropped_targets = TF.resize(TF.crop(targets, 64 - 50, 0, 50, 50), (64, 64))
 
-            case 5:
-                cropped_frames = TF.crop(frames, 0, 28, 200, 200)
-                cropped_targets = TF.resize(TF.crop(targets, 0, 7, 50, 50), (64, 64))
+        elif rand_region == 5:
+            cropped_frames = TF.crop(frames, 0, 28, 200, 200)
+            cropped_targets = TF.resize(TF.crop(targets, 0, 7, 50, 50), (64, 64))
 
-            case 6:
-                cropped_frames = TF.crop(frames, 28, 256 - 200, 200, 200)
-                cropped_targets = TF.resize(TF.crop(targets, 7, 64 - 50, 50, 50), (64, 64))
+        elif rand_region == 6:
+            cropped_frames = TF.crop(frames, 28, 256 - 200, 200, 200)
+            cropped_targets = TF.resize(TF.crop(targets, 7, 64 - 50, 50, 50), (64, 64))
 
-            case 7:
-                cropped_frames = TF.crop(frames, 256 - 200, 28, 200, 200)
-                cropped_targets = TF.resize(TF.crop(targets, 64 - 50, 7, 50, 50), (64, 64))
+        elif rand_region == 7:
+            cropped_frames = TF.crop(frames, 256 - 200, 28, 200, 200)
+            cropped_targets = TF.resize(TF.crop(targets, 64 - 50, 7, 50, 50), (64, 64))
 
-            case 8:
-                cropped_frames = TF.crop(frames, 28, 0, 200, 200)
-                cropped_targets = TF.resize(TF.crop(targets, 7, 0, 50, 50), (64, 64))
-
+        elif rand_region == 8:
+            cropped_frames = TF.crop(frames, 28, 0, 200, 200)
+            cropped_targets = TF.resize(TF.crop(targets, 7, 0, 50, 50), (64, 64))
         return cropped_frames, cropped_targets
 
 
@@ -79,7 +77,6 @@ def create_frame_sequences(data, sequence_length, overlap_length, batch_size):
         sequence = data[start_index : start_index + sequence_length]
         sequences.append(sequence)
         start_index += sequence_length - overlap_length
-
     num_sequences = (len(sequences) // batch_size) * batch_size
     sequences = sequences[:num_sequences]
 
